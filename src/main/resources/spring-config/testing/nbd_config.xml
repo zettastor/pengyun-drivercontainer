@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <bean class="py.coordinator.nbd.NbdServer" id="NbdServer" scope="singleton">
+    <constructor-arg index="0">
+      <ref bean="NBDConfiguration"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+      <ref bean="Coordinator"/>
+    </constructor-arg>
+  </bean>
+
+  <bean class="py.coordinator.configuration.NbdConfiguration" id="NbdConfiguration"
+    scope="singleton">
+    <property name="port">
+      <value>1234</value>
+    </property>
+  </bean>
+
+  <import resource="coordinator_app_testing.xml"/>
+</beans>

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <bean class="org.springframework.context.support.PropertySourcesPlaceholderConfigurer"
+    id="applicationProperties">
+    <property name="location" value="classpath:config/drivercontainer.properties"/>
+  </bean>
+
+  <bean class="py.drivercontainer.DriverContainerAppEngine" id="DriverContainerAppEngine"
+    init-method="start"
+    scope="singleton">
+    <constructor-arg index="0">
+      <ref bean="DriverContainer"/>
+    </constructor-arg>
+    <property name="context">
+      <ref bean="AppContext"/>
+    </property>
+    <property name="healthChecker">
+      <ref bean="HealthCheck"/>
+    </property>
+  </bean>
+
+  <bean class="py.drivercontainer.service.DriverContainerImpl" id="DriverContainer"
+    init-method="init" scope="singleton">
+    <constructor-arg index="0">
+      <ref bean="AppContext"/>
+    </constructor-arg>
+    <property name="nbdPortContainer">
+      <ref bean="NbdPortContainer"/>
+    </property>
+    <property name="iscsiPortContainer">
+      <ref bean="IscsiPortContainer"/>
+    </property>
+    <property name="sweepExecutor">
+      <ref bean="SweepExecutor"/>
+    </property>
+    <property name="reportExecutor">
+      <ref bean="ReportExecutor"/>
+    </property>
+    <property name="sweepWorkerFactory">
+      <ref bean="SweepWorkerFactory"/>
+    </property>
+    <property name="reportWorkerFactory">
+      <ref bean="ReportWorkerFactory"/>
+    </property>
+  </bean>
+
+  <bean class="py.app.context.AppContextImpl" id="AppContext" scope="singleton">
+    <constructor-arg index="0">
+      <value>${app.name}</value>
+    </constructor-arg>
+    <constructor-arg index="1">
+      <value>${app.port}</value>
+    </constructor-arg>
+    <property name="instanceIdStore">
+      <ref bean="DriverContainerInstanceIdStore"/>
+    </property>
+  </bean>
+
+  <bean class="py.app.context.InstanceIdFileStore" id="DriverContainerInstanceIdStore"
+    scope="singleton">
+    <constructor-arg index="0">
+      <value>config_info</value>
+    </constructor-arg>
+    <constructor-arg index="1">
+      <value>${app.name}</value>
+    </constructor-arg>
+    <constructor-arg index="2">
+      <value>${app.port}</value>
+    </constructor-arg>
+  </bean>
+
+  <bean class="py.app.healthcheck.HealthCheckerWithThriftImpl" id="HealthCheck" scope="singleton">
+    <!-- healthcheckingrate -->
+    <constructor-arg index="0">
+      <value>${health.checker.rate}</value>
+    </constructor-arg>
+    <!-- drivercontainer port -->
+    <constructor-arg index="1">
+      <value>${app.port}</value>
+    </constructor-arg>
+    <property name="serviceClientClazz"
+      value="py.thrift.dirvercontainer.service.DriverContainer.Client">
+    </property>
+    <property name="heartBeatWorkerFactory">
+      <ref bean="HeartBeatWorkerFactory"/>
+    </property>
+  </bean>
+
+  <bean class="py.dih.client.worker.HeartBeatWorkerFactory" id="HeartBeatWorkerFactory"
+    scope="singleton">
+    <property name="requestTimeout">
+      <value>${thrift.client.timeout}</value>
+    </property>
+    <property name="localDihPort">
+      <value>${local.dih.port}</value>
+    </property>
+    <property name="appContext">
+      <ref bean="AppContext"/>
+    </property>
+    <property name="DihClientFactory">
+      <ref bean="DihClientFactory"/>
+    </property>
+  </bean>
+
+  <bean class="py.drivercontainer.service.PortContainerImpl" id="NbdPortContainer"
+    scope="singleton">
+    <constructor-arg index="0">
+      <value>NBD</value>
+    </constructor-arg>
+    <property name="portList">
+      <list>
+        <value>1234</value>
+        <value>1235</value>
+        <value>1236</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean class="py.drivercontainer.service.PortContainerImpl" id="IscsiPortContainer"
+    scope="singleton">
+    <constructor-arg index="0">
+      <value>ISCSI</value>
+    </constructor-arg>
+    <property name="portList">
+      <list>
+        <value>3260</value>
+        <value>3261</value>
+        <value>3262</value>
+      </list>
+    </property>
+  </bean>
+
+  <bean class="py.dih.client.DihInstanceStore" id="InstanceStore" init-method="init"
+    scope="singleton">
+    <property name="requestTimeout">
+      <value>${thrift.client.timeout}</value>
+    </property>
+    <property name="localDihPort">
+      <value>${local.dih.port}</value>
+    </property>
+    <property name="DihClientFactory">
+      <ref bean="DihClientFactory"/>
+    </property>
+  </bean>
+
+  <bean class="py.dih.client.DihClientFactory" id="DihClientFactory"></bean>
+
+  <bean class="py.periodic.impl.PeriodicWorkExecutorImpl" id="SweepExecutor" scope="singleton">
+    <property name="executionOptionsReader">
+      <ref bean="SweepExecutionOptionReader"/>
+    </property>
+  </bean>
+
+  <bean class="py.periodic.impl.PeriodicWorkExecutorImpl" id="ReportExecutor" scope="singleton">
+    <property name="executionOptionsReader">
+      <ref bean="ReportExecutionOptionReader"/>
+    </property>
+  </bean>
+
+  <bean class="py.drivercontainer.worker.DriversSweepWorkerFactory" id="SweepWorkerFactory">
+  </bean>
+
+  <bean class="py.drivercontainer.worker.ReportDriverMetadataWorkerFactory"
+    id="ReportWorkerFactory">
+    <property name="informationCenterClientFactory">
+      <ref bean="InfoCenterClientFactory"/>
+    </property>
+  </bean>
+
+  <bean class="py.infocenter.client.InformationCenterClientFactory" id="InfoCenterClientFactory">
+    <property name="instanceStore">
+      <ref bean="InstanceStore"/>
+    </property>
+  </bean>
+
+  <bean class="py.periodic.impl.ExecutionOptionsReader" id="SweepExecutionOptionReader"
+    scope="singleton">
+    <!-- max number workers -->
+    <constructor-arg index="0">
+      <value>1</value>
+    </constructor-arg>
+    <!-- number workers -->
+    <constructor-arg index="1">
+      <value>1</value>
+    </constructor-arg>
+    <!-- fixed time -->
+    <constructor-arg index="2">
+      <value>1000</value>
+    </constructor-arg>
+    <!-- delay time -->
+    <constructor-arg index="3">
+      <value></value>
+    </constructor-arg>
+  </bean>
+
+  <bean class="py.periodic.impl.ExecutionOptionsReader" id="ReportExecutionOptionReader"
+    scope="singleton">
+    <constructor-arg index="0">
+      <value>1</value>
+    </constructor-arg>
+    <constructor-arg index="1">
+      <value>1</value>
+    </constructor-arg>
+    <constructor-arg index="2">
+      <value>1000</value>
+    </constructor-arg>
+    <constructor-arg index="3">
+      <value></value>
+    </constructor-arg>
+  </bean>
+</beans>

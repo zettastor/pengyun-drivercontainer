@@ -1,0 +1,118 @@
+{
+  "fabric_modules": [],
+  "storage_objects": [
+    {
+      "attributes": {
+        "block_size": 512,
+        "emulate_dpo": 0,
+        "emulate_fua_read": 0,
+        "emulate_fua_write": 1,
+        "emulate_model_alias": 1,
+        "emulate_rest_reord": 0,
+        "emulate_tas": 1,
+        "emulate_tpu": 0,
+        "emulate_tpws": 0,
+        "emulate_ua_intlck_ctrl": 0,
+        "emulate_write_cache": 0,
+        "enforce_pr_isids": 1,
+        "fabric_max_sectors": 8192,
+        "is_nonrot": 1,
+        "max_unmap_block_desc_count": 0,
+        "max_unmap_lba_count": 0,
+        "max_write_same_len": 65535,
+        "optimal_sectors": 8192,
+        "queue_depth": 128,
+        "unmap_granularity": 0,
+        "unmap_granularity_alignment": 0
+      },
+      "dev": "/pyd/dev0",
+      "name": "pyd0",
+      "plugin": "block",
+      "readonly": false,
+      "write_back": false,
+      "wwn": "fbcc3016-4c83-473b-a492-a4dd266a4910"
+    }
+  ],
+  "targets": [
+    {
+      "fabric": "iscsi",
+      "tpgs": [
+        {
+          "attributes": {
+            "authentication": 0,
+            "cache_dynamic_acls": 1,
+            "default_cmdsn_depth": 16,
+            "demo_mode_write_protect": 0,
+            "generate_node_acls": 1,
+            "login_timeout": 15,
+            "netif_timeout": 2,
+            "prod_mode_write_protect": 0
+          },
+          "enable": true,
+          "luns": [
+            {
+              "index": 0,
+              "storage_object": "/backstores/block/pyd0"
+            }
+          ],
+          "node_acls": [
+            {
+              "attributes": {
+                "dataout_timeout": 3,
+                "dataout_timeout_retries": 5,
+                "default_erl": 0,
+                "nopin_response_timeout": 30,
+                "nopin_timeout": 15,
+                "random_datain_pdu_offsets": 0,
+                "random_datain_seq_offsets": 0,
+                "random_r2t_offsets": 0
+              },
+              "chap_password": "312",
+              "chap_userid": "312",
+              "mapped_luns": [
+                {
+                  "index": 0,
+                  "tpg_lun": 0,
+                  "write_protect": false
+                }
+              ],
+              "node_wwn": "iqn.2003-01.zettor:255.255.255.255"
+            }
+          ],
+          "parameters": {
+            "AuthMethod": "CHAP,None",
+            "DataDigest": "CRC32C,None",
+            "DataPDUInOrder": "Yes",
+            "DataSequenceInOrder": "Yes",
+            "DefaultTime2Retain": "20",
+            "DefaultTime2Wait": "2",
+            "ErrorRecoveryLevel": "0",
+            "FirstBurstLength": "65536",
+            "HeaderDigest": "CRC32C,None",
+            "IFMarkInt": "2048~65535",
+            "IFMarker": "No",
+            "ImmediateData": "Yes",
+            "InitialR2T": "Yes",
+            "MaxBurstLength": "262144",
+            "MaxConnections": "1",
+            "MaxOutstandingR2T": "1",
+            "MaxRecvDataSegmentLength": "8192",
+            "MaxXmitDataSegmentLength": "262144",
+            "OFMarkInt": "2048~65535",
+            "OFMarker": "No",
+            "TargetAlias": "LIO Target"
+          },
+          "portals": [
+            {
+              "ip_address": "0.0.0.0",
+              "iser": false,
+              "port": 3260
+            }
+          ],
+          "tag": 1
+        }
+      ],
+      "wwn": "iqn.2003-01.org.linux-iscsi.vm4.x8664:sn.895f5f68476a"
+    }
+  ]
+}

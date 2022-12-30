@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <bean class="py.common.struct.EndPoint" id="DataNodeEndpoint1" scope="singleton">
+    <constructor-arg type="java.lang.String">
+      <value>localhost</value>
+    </constructor-arg>
+    <constructor-arg type="int">
+      <value>10011</value>
+    </constructor-arg>
+  </bean>
+
+  <bean class="py.common.struct.EndPoint" id="DataNodeEndpoint2" scope="singleton">
+    <constructor-arg type="java.lang.String">
+      <value>localhost</value>
+    </constructor-arg>
+    <constructor-arg type="int">
+      <value>10012</value>
+    </constructor-arg>
+  </bean>
+  <bean class="py.common.struct.EndPoint" id="DataNodeEndpoint3" scope="singleton">
+    <constructor-arg type="java.lang.String">
+      <value>localhost</value>
+    </constructor-arg>
+    <constructor-arg type="int">
+      <value>10013</value>
+    </constructor-arg>
+  </bean>
+
+  <bean class="py.common.struct.EndPoint" id="InfoCenterEndpoint" scope="singleton">
+    <constructor-arg type="java.lang.String">
+      <value>localhost</value>
+    </constructor-arg>
+    <constructor-arg type="int">
+      <value>8020</value>
+    </constructor-arg>
+  </bean>
+
+  <bean class="py.common.struct.EndPoint" id="CoordinatorEp" scope="singleton">
+    <constructor-arg type="java.lang.String">
+      <value>localhost</value>
+    </constructor-arg>
+    <constructor-arg type="int">
+      <value>10021</value>
+    </constructor-arg>
+  </bean>
+</beans>

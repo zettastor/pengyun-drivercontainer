@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <bean class="py.instance.InstanceId" id="CoordinatorId" scope="singleton">
+    <constructor-arg type="long">
+      <value>10021</value>
+    </constructor-arg>
+  </bean>
+
+  <bean class="py.instance.InstanceId" id="DataNodeInstanceId1" scope="singleton">
+    <constructor-arg type="long">
+      <value>10011</value>
+    </constructor-arg>
+  </bean>
+
+  <bean class="py.instance.InstanceId" id="DataNodeInstanceId2" scope="singleton">
+    <constructor-arg type="long">
+      <value>10012</value>
+    </constructor-arg>
+  </bean>
+  <bean class="py.instance.InstanceId" id="DataNodeInstanceId3" scope="singleton">
+    <constructor-arg type="long">
+      <value>10013</value>
+    </constructor-arg>
+  </bean>
+  <bean class="py.instance.InstanceId" id="InfoCenterInstanceId" scope="singleton">
+    <constructor-arg type="long">
+      <value>8020</value>
+    </constructor-arg>
+  </bean>
+  <bean class="py.instance.Instance" id="DataNodeInstance1" scope="singleton">
+    <constructor-arg index="0">
+      <ref bean="DataNodeInstanceId1"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+      <ref bean="DataNodeEndpoint1"/>
+    </constructor-arg>
+    <constructor-arg type="java.lang.String">
+      <value>DataNode</value>
+    </constructor-arg>
+  </bean>
+
+  <bean class="py.instance.Instance" id="DataNodeInstance2" scope="singleton">
+    <constructor-arg index="0">
+      <ref bean="DataNodeInstanceId2"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+      <ref bean="DataNodeEndpoint2"/>
+    </constructor-arg>
+    <constructor-arg type="java.lang.String">
+      <value>DataNode</value>
+    </constructor-arg>
+  </bean>
+  <bean class="py.instance.Instance" id="DataNodeInstance3" scope="singleton">
+    <constructor-arg index="0">
+      <ref bean="DataNodeInstanceId3"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+      <ref bean="DataNodeEndpoint3"/>
+    </constructor-arg>
+    <constructor-arg type="java.lang.String">
+      <value>DataNode</value>
+    </constructor-arg>
+  </bean>
+  <bean class="py.instance.Instance" id="CoordinatorInstance" scope="singleton">
+    <constructor-arg index="0">
+      <ref bean="CoordinatorId"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+      <ref bean="CoordinatorEp"/>
+    </constructor-arg>
+    <constructor-arg type="java.lang.String">
+      <value>Coordinator</value>
+    </constructor-arg>
+  </bean>
+
+  <bean class="py.instance.Instance" id="InfoCenterInstance" scope="singleton">
+    <constructor-arg index="0">
+      <ref bean="InfoCenterInstanceId"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+      <ref bean="InfoCenterEndpoint"/>
+    </constructor-arg>
+    <constructor-arg type="java.lang.String">
+      <value>InfoCenter</value>
+    </constructor-arg>
+  </bean>
+  <bean class="py.app.context.DummyInstanceIdStore" id="CoordinatorIdStore" scope="singleton">
+    <property name="InstanceId">
+      <ref bean="CoordinatorId"/>
+    </property>
+  </bean>
+
+  <import resource="dummy_endpoints.xml"/>
+
+  <!-- <bean id="InstanceStore" class="py.instance.DummyInstanceStore" scope="singleton">
+      <property name="instances">
+          <set>
+              <ref bean="DataNodeInstance1" />
+              <ref bean="DataNodeInstance2" />
+              <ref bean="DataNodeInstance3" />
+              <ref bean="InfoCenterInstance" />
+              <ref bean="CoordinatorInstance" />
+          </set>
+      </property>
+  </bean> -->
+
+</beans>

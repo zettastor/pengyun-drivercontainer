@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+  <!-- resource="dummy_instance_store.xml" /-->
+
+  <bean class="py.coordinator.main.Coordinator" id="Coordinator" scope="singleton">
+    <constructor-arg index="0">
+      <ref bean="AppContext"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+      <ref bean="InstanceStore"/>
+    </constructor-arg>
+    <constructor-arg index="2">
+      <ref bean="DataNodeSyncClientFactory"/>
+    </constructor-arg>
+    <constructor-arg index="3">
+      <ref bean="DataNodeAsyncClientFactory"/>
+    </constructor-arg>
+    <constructor-arg index="4">
+      <ref bean="CoordinatorConfiguration"/>
+    </constructor-arg>
+    <property name="volumeInfoRetriever">
+      <ref bean="VolumeInfoRetriever"/>
+    </property>
+    <property name="pageSize">
+      <value>131072</value>
+    </property>
+    <property name="segmentSize">
+      <value>16777216</value>
+    </property>
+  </bean>
+
+  <bean class="py.app.context.AppContextImpl" id="AppContext" scope="singleton">
+    <constructor-arg type="java.lang.String">
+      <value>coordinator</value>
+    </constructor-arg>
+    <property name="instanceIdStore">
+      <ref bean="CoordinatorIdStore"/>
+    </property>
+  </bean>
+
+  <bean class="py.datanode.client.DataNodeClientFactory" id="DataNodeClientFactory"
+    scope="singleton"></bean>
+
+  <bean class="py.coordinator.configuration.CoordinatorConfig" id="CoordinatorConfiguration"
+    scope="singleton"></bean>
+
+  <bean class="py.coordinator.volumeinfo.VolumeInfoRetrieverImpl" id="VolumeInfoRetriever"
+    scope="singleton">
+    <constructor-arg index="0">
+      <ref bean="InfoCenterEndpoint"/>
+    </constructor-arg>
+    <constructor-arg index="1">
+      <value>20000</value>
+    </constructor-arg>
+  </bean>
+
+  <bean class="py.dih.client.DihInstanceStore" id="InstanceStore" init-method="init"
+    scope="singleton">
+    <property name="thriftClientTimeout">
+      <value>30000</value>
+    </property>
+    <property name="dihPort">
+      <value>10000</value>
+    </property>
+  </bean>
+
+</beans>
